@@ -18,3 +18,9 @@ FlavorIQ maps ingredients across a controlled flavor taxonomy (aroma, intensity,
 - Nutrition tracking
 - User accounts
 - Social features
+
+## Wireframes
+
+### Home
+![Home](wireframes/Home.png)
+
