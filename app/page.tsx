@@ -23,36 +23,45 @@ export default function HomePage() {
   }
 
   return (
-    <main className="min-h-screen flex flex-col items-center justify-center px-5 py-16 bg-[#F7F6F2]">
-      <div className="w-full max-w-[420px]">
+    <main className="min-h-[100dvh] flex flex-col bg-[#F7F6F2]">
 
-        {/* Logo */}
-        <div className="mb-10">
-          <h1 className="font-display text-[38px] leading-none text-[#1A1A1A] mb-1">FlavorIQ</h1>
-          <p className="text-[12px] text-[#999] tracking-widest uppercase">Flavor intelligence</p>
-        </div>
+      {/* Top nav */}
+      <div className="px-5 pt-12 pb-2">
+        <h1 className="font-display text-[32px] leading-none text-[#1A1A1A]">FlavorIQ</h1>
+        <p className="text-[11px] text-[#bbb] tracking-widest uppercase mt-1">Flavor intelligence</p>
+      </div>
 
-        {/* Hero */}
-        <div className="mb-9">
-          <p className="text-[11px] text-[#aaa] uppercase tracking-widest mb-2">Flavor encyclopedia</p>
-          <h2 className="font-display text-[28px] leading-snug text-[#1A1A1A] mb-3">
-            Understand ingredients.<br />Cook confidently.
-          </h2>
-          <p className="text-[13px] text-[#777] leading-relaxed">
-            Enter any ingredient to explore its flavor profile and discover what pairs with it.
-          </p>
-        </div>
+      {/* Hero */}
+      <div className="px-5 pt-8 pb-6">
+        <p className="text-[11px] text-[#aaa] uppercase tracking-widest mb-2">Flavor encyclopedia</p>
+        <h2 className="font-display text-[26px] leading-snug text-[#1A1A1A] mb-2">
+          Understand ingredients.<br />Cook confidently.
+        </h2>
+        <p className="text-[13px] text-[#777] leading-relaxed">
+          Enter any ingredient to explore its flavor profile and discover what pairs with it.
+        </p>
+      </div>
+
+      {/* Form */}
+      <div className="px-5 flex-1">
 
         {/* Main ingredient */}
         <div className="mb-3">
-          <label className="block text-[11px] font-medium text-[#777] mb-1.5">Main ingredient</label>
+          <label className="block text-[11px] font-medium text-[#777] mb-1.5">
+            Main ingredient
+          </label>
           <input
             type="text"
+            inputMode="text"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="none"
             value={main}
             onChange={e => { setMain(e.target.value); setError('') }}
             onKeyDown={e => e.key === 'Enter' && handleAnalyze()}
             placeholder="e.g. cardamom, miso, tamarind…"
-            className="w-full px-4 py-3 rounded-xl border border-[#E0DED8] bg-white text-[#1A1A1A] placeholder:text-[#C0BDB5] focus:outline-none focus:ring-2 focus:ring-[#1A1A1A]/10 text-[14px] transition"
+            className="w-full px-4 py-3.5 rounded-2xl border border-[#E0DED8] bg-white text-[#1A1A1A] placeholder:text-[#C0BDB5] focus:outline-none focus:ring-2 focus:ring-[#1A1A1A]/10 text-[15px]"
+            style={{ WebkitAppearance: 'none' }}
           />
         </div>
 
@@ -64,21 +73,28 @@ export default function HomePage() {
           </div>
           <input
             type="text"
+            inputMode="text"
+            autoComplete="off"
+            autoCorrect="off"
+            autoCapitalize="none"
             value={pantry}
             onChange={e => setPantry(e.target.value)}
             onKeyDown={e => e.key === 'Enter' && handleAnalyze()}
             placeholder="Add to check compatibility…"
-            className="w-full px-4 py-3 rounded-xl border border-dashed border-[#E0DED8] bg-[#F7F6F2] text-[#1A1A1A] placeholder:text-[#C0BDB5] focus:outline-none focus:ring-2 focus:ring-[#1A1A1A]/10 text-[14px] transition"
+            className="w-full px-4 py-3.5 rounded-2xl border border-dashed border-[#E0DED8] bg-[#F7F6F2] text-[#1A1A1A] placeholder:text-[#C0BDB5] focus:outline-none focus:ring-2 focus:ring-[#1A1A1A]/10 text-[15px]"
+            style={{ WebkitAppearance: 'none' }}
           />
         </div>
 
-        {error && <p className="text-[12px] text-red-500 mb-3">{error}</p>}
+        {error && (
+          <p className="text-[13px] text-red-500 mb-3 px-1">{error}</p>
+        )}
 
-        {/* CTA */}
+        {/* CTA — large touch target */}
         <button
           onClick={handleAnalyze}
-          disabled={loading}
-          className="w-full py-3.5 rounded-xl bg-[#1A1A1A] text-[#F7F6F2] text-[14px] font-medium disabled:opacity-40 hover:bg-[#333] transition-colors"
+          disabled={loading || !main.trim()}
+          className="w-full py-4 rounded-2xl bg-[#1A1A1A] text-[#F7F6F2] text-[15px] font-medium disabled:opacity-40 active:scale-[0.98] transition-all touch-manipulation"
         >
           {loading ? 'Analyzing…' : 'Analyze flavor'}
         </button>
@@ -88,22 +104,24 @@ export default function HomePage() {
         </p>
 
         {/* Suggestions */}
-        <div className="mt-10">
+        <div className="mt-8">
           <p className="text-[11px] font-medium text-[#aaa] uppercase tracking-widest mb-3">Try these</p>
           <div className="flex flex-wrap gap-2">
             {SUGGESTIONS.map(s => (
               <button
                 key={s}
                 onClick={() => setMain(s)}
-                className="px-3 py-1.5 rounded-full text-[12px] bg-white border border-[#E0DED8] text-[#555] hover:bg-[#EEECEA] transition-colors"
+                className="px-3.5 py-2 rounded-full text-[13px] bg-white border border-[#E0DED8] text-[#555] active:bg-[#EEECEA] transition-colors touch-manipulation"
               >
                 {s}
               </button>
             ))}
           </div>
         </div>
-
       </div>
+
+      {/* Safe area bottom padding for iPhone */}
+      <div className="h-8 shrink-0" />
     </main>
   )
 }

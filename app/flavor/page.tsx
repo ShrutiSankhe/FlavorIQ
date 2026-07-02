@@ -18,7 +18,7 @@ function FlavorPageInner() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [pantryInput, setPantryInput] = useState('')
-  const [checkingPantry, setCheckingPantry] = useState(false)
+  const [cached, setCached] = useState(false)
 
   useEffect(() => {
     if (!main) { router.push('/'); return }
@@ -40,6 +40,7 @@ function FlavorPageInner() {
       if (!res.ok) throw new Error(data.error || 'Something went wrong')
       setProfile(data.profile)
       if (data.pairing) setPairing(data.pairing)
+      if (data._meta?.profileSource === 'cache') setCached(true)
     } catch (e: any) {
       setError(e.message)
     } finally {
@@ -54,28 +55,32 @@ function FlavorPageInner() {
   }
 
   return (
-    <main className="min-h-screen bg-[#F7F6F2] px-5 py-10">
-      <div className="w-full max-w-[420px] mx-auto">
+    <main className="min-h-[100dvh] bg-[#F7F6F2]">
 
-        {/* Nav */}
-        <div className="flex items-center justify-between mb-8">
-          <button
-            onClick={() => router.push('/')}
-            className="flex items-center gap-1.5 text-[13px] text-[#999] hover:text-[#555] transition-colors"
-          >
-            ← Back
-          </button>
-          <span className="font-display text-[16px] text-[#1A1A1A]">FlavorIQ</span>
-          <div className="w-12" />
-        </div>
+      {/* Sticky nav — safe on iPhone notch */}
+      <div className="sticky top-0 z-10 bg-[#F7F6F2]/90 backdrop-blur-sm border-b border-[#EEECEA] px-5 py-3 flex items-center justify-between">
+        <button
+          onClick={() => router.push('/')}
+          className="flex items-center gap-1 text-[13px] text-[#999] active:text-[#555] transition-colors touch-manipulation py-2 -ml-1 pr-3"
+        >
+          ← Back
+        </button>
+        <span className="font-display text-[16px] text-[#1A1A1A]">FlavorIQ</span>
+        {cached && (
+          <span className="text-[10px] text-[#C0BDB5] uppercase tracking-wider">cached</span>
+        )}
+        {!cached && <div className="w-12" />}
+      </div>
+
+      <div className="px-5 py-6 max-w-lg mx-auto">
 
         {/* Error */}
         {error && (
-          <div className="rounded-xl bg-red-50 border border-red-200 p-4 mb-6">
-            <p className="text-[13px] text-red-700">{error}</p>
+          <div className="rounded-2xl bg-red-50 border border-red-200 p-4 mb-6">
+            <p className="text-[13px] text-red-700 mb-2">{error}</p>
             <button
               onClick={() => fetchData(main, pantry)}
-              className="text-[12px] text-red-500 underline mt-2"
+              className="text-[12px] text-red-500 underline touch-manipulation"
             >
               Try again
             </button>
@@ -94,24 +99,30 @@ function FlavorPageInner() {
               <PairingVerdict main={main} pantry={pantry} result={pairing} />
             )}
 
-            {/* Pantry check input — only shown if no pantry check yet */}
+            {/* Pantry check input */}
             {!pantry && (
               <div className="mt-8">
                 <div className="border-t border-[#EEECEA] mb-6" />
-                <p className="text-[10px] font-medium text-[#aaa] uppercase tracking-widest mb-3">Check a pairing</p>
+                <p className="text-[10px] font-medium text-[#aaa] uppercase tracking-widest mb-3">
+                  Check a pairing
+                </p>
                 <div className="flex gap-2">
                   <input
                     type="text"
+                    inputMode="text"
+                    autoComplete="off"
+                    autoCapitalize="none"
                     value={pantryInput}
                     onChange={e => setPantryInput(e.target.value)}
                     onKeyDown={e => e.key === 'Enter' && handlePantryCheck()}
                     placeholder={`What do you have with ${profile.name}?`}
-                    className="flex-1 px-4 py-2.5 rounded-xl border border-[#E0DED8] bg-white text-[#1A1A1A] placeholder:text-[#C0BDB5] focus:outline-none focus:ring-2 focus:ring-[#1A1A1A]/10 text-[13px]"
+                    className="flex-1 px-4 py-3.5 rounded-2xl border border-[#E0DED8] bg-white text-[#1A1A1A] placeholder:text-[#C0BDB5] focus:outline-none focus:ring-2 focus:ring-[#1A1A1A]/10 text-[14px]"
+                    style={{ WebkitAppearance: 'none' }}
                   />
                   <button
                     onClick={handlePantryCheck}
                     disabled={!pantryInput.trim()}
-                    className="px-4 py-2.5 rounded-xl bg-[#1A1A1A] text-white text-[13px] font-medium disabled:opacity-30 hover:bg-[#333] transition-colors"
+                    className="px-5 py-3.5 rounded-2xl bg-[#1A1A1A] text-white text-[14px] font-medium disabled:opacity-30 active:scale-[0.97] transition-all touch-manipulation"
                   >
                     Check
                   </button>
@@ -123,16 +134,16 @@ function FlavorPageInner() {
             {pantry && (
               <div className="mt-8">
                 <div className="border-t border-[#EEECEA] mb-6" />
-                <div className="flex gap-2">
+                <div className="flex flex-col gap-2.5 sm:flex-row">
                   <button
                     onClick={() => router.push(`/flavor?main=${encodeURIComponent(main)}`)}
-                    className="flex-1 py-3 rounded-xl border border-[#E0DED8] text-[13px] text-[#555] hover:bg-white transition-colors"
+                    className="flex-1 py-4 rounded-2xl border border-[#E0DED8] text-[14px] text-[#555] active:bg-white transition-colors touch-manipulation"
                   >
                     Try another pairing
                   </button>
                   <button
                     onClick={() => router.push('/')}
-                    className="flex-1 py-3 rounded-xl bg-[#1A1A1A] text-[#F7F6F2] text-[13px] font-medium hover:bg-[#333] transition-colors"
+                    className="flex-1 py-4 rounded-2xl bg-[#1A1A1A] text-[#F7F6F2] text-[14px] font-medium active:scale-[0.98] transition-all touch-manipulation"
                   >
                     New ingredient
                   </button>
@@ -141,8 +152,10 @@ function FlavorPageInner() {
             )}
           </>
         )}
-
       </div>
+
+      {/* Safe area bottom padding for iPhone */}
+      <div className="h-8" />
     </main>
   )
 }
@@ -150,7 +163,7 @@ function FlavorPageInner() {
 export default function FlavorPage() {
   return (
     <Suspense fallback={
-      <main className="min-h-screen bg-[#F7F6F2] flex items-center justify-center">
+      <main className="min-h-[100dvh] bg-[#F7F6F2] flex items-center justify-center">
         <div className="w-6 h-6 border-2 border-[#ddd] border-t-[#555] rounded-full animate-spin" />
       </main>
     }>

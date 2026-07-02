@@ -6,12 +6,30 @@
 
 * { box-sizing: border-box; }
 
+/* Fix iOS Safari 100vh bug */
+html {
+  height: -webkit-fill-available;
+}
+
 body {
   font-family: 'DM Sans', sans-serif;
   background: #F7F6F2;
   color: #1A1A1A;
+  min-height: -webkit-fill-available;
+  /* Prevent text size adjustment on rotation */
+  -webkit-text-size-adjust: 100%;
 }
 
 .font-display {
   font-family: 'DM Serif Display', serif;
+}
+
+/* Smooth scrolling on iOS */
+* {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
 }

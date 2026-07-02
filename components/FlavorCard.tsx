@@ -27,12 +27,15 @@ function tagStyle(tag: string): string {
 
 function SensoryBar({ label, value, color }: { label: string; value: number; color: string }) {
   return (
-    <div className="flex items-center gap-3 mb-2.5">
-      <span className="text-[12px] text-[#999] w-20 shrink-0">{label}</span>
-      <div className="flex-1 h-[5px] bg-[#EEECEA] rounded-full overflow-hidden">
-        <div className={`h-full rounded-full ${color}`} style={{ width: `${(value / 10) * 100}%` }} />
+    <div className="flex items-center gap-3 mb-3">
+      <span className="text-[13px] text-[#999] w-20 shrink-0">{label}</span>
+      <div className="flex-1 h-[6px] bg-[#EEECEA] rounded-full overflow-hidden">
+        <div
+          className={`h-full rounded-full ${color} transition-all duration-700`}
+          style={{ width: `${(value / 10) * 100}%` }}
+        />
       </div>
-      <span className="text-[11px] text-[#C0BDB5] w-8 text-right">{value}/10</span>
+      <span className="text-[12px] text-[#C0BDB5] w-8 text-right">{value}/10</span>
     </div>
   )
 }
@@ -43,27 +46,27 @@ export default function FlavorCard({ profile }: { profile: FlavorProfile }) {
   return (
     <div>
       {/* Header */}
-      <div className="flex items-center gap-3 mb-4">
-        <div className="w-12 h-12 rounded-full bg-[#EAF3DE] flex items-center justify-center font-display text-xl text-[#27500A] shrink-0">
+      <div className="flex items-center gap-3.5 mb-4">
+        <div className="w-14 h-14 rounded-full bg-[#EAF3DE] flex items-center justify-center font-display text-2xl text-[#27500A] shrink-0">
           {initial}
         </div>
         <div>
-          <h2 className="font-display text-[24px] leading-tight text-[#1A1A1A]">{profile.name}</h2>
+          <h2 className="font-display text-[26px] leading-tight text-[#1A1A1A]">{profile.name}</h2>
           <p className="text-[12px] text-[#999] mt-0.5">{profile.region} · {profile.category}</p>
         </div>
       </div>
 
       {/* Summary */}
-      <p className="text-[13px] text-[#666] leading-relaxed mb-5">{profile.summary}</p>
+      <p className="text-[14px] text-[#666] leading-relaxed mb-5">{profile.summary}</p>
 
       {/* Tags */}
-      <div className="flex flex-wrap gap-1.5 mb-6">
+      <div className="flex flex-wrap gap-2 mb-6">
         {profile.flavor_tags.map(tag => (
-          <span key={tag} className={`px-2.5 py-1 rounded-full text-[11px] font-medium ${tagStyle(tag)}`}>
+          <span key={tag} className={`px-3 py-1.5 rounded-full text-[12px] font-medium ${tagStyle(tag)}`}>
             {tag}
           </span>
         ))}
-        <span className={`px-2.5 py-1 rounded-full text-[11px] font-medium ${
+        <span className={`px-3 py-1.5 rounded-full text-[12px] font-medium ${
           profile.heat_profile === 'warming' ? 'bg-amber-50 text-amber-700' :
           profile.heat_profile === 'cooling' ? 'bg-teal-50 text-teal-700' :
           'bg-stone-100 text-stone-600'
@@ -73,40 +76,40 @@ export default function FlavorCard({ profile }: { profile: FlavorProfile }) {
       </div>
 
       {/* Sensory */}
-      <p className="text-[10px] font-medium text-[#aaa] uppercase tracking-widest mb-3">Sensory profile</p>
-      <SensoryBar label="Heat"      value={profile.sensory.heat}      color="bg-amber-400" />
-      <SensoryBar label="Intensity" value={profile.sensory.intensity} color="bg-purple-400" />
-      <SensoryBar label="Sweetness" value={profile.sensory.sweetness} color="bg-teal-400"  />
-      <SensoryBar label="Bitterness"value={profile.sensory.bitterness}color="bg-orange-400"/>
+      <p className="text-[10px] font-medium text-[#aaa] uppercase tracking-widest mb-4">Sensory profile</p>
+      <SensoryBar label="Heat"       value={profile.sensory.heat}       color="bg-amber-400"  />
+      <SensoryBar label="Intensity"  value={profile.sensory.intensity}  color="bg-purple-400" />
+      <SensoryBar label="Sweetness"  value={profile.sensory.sweetness}  color="bg-teal-400"   />
+      <SensoryBar label="Bitterness" value={profile.sensory.bitterness} color="bg-orange-400" />
 
       <div className="border-t border-[#EEECEA] my-6" />
 
       {/* Traditional pairings */}
-      <p className="text-[10px] font-medium text-[#aaa] uppercase tracking-widest mb-3">Traditional pairings</p>
-      <div className="space-y-3 mb-6">
+      <p className="text-[10px] font-medium text-[#aaa] uppercase tracking-widest mb-4">Traditional pairings</p>
+      <div className="space-y-4 mb-6">
         {profile.traditional_pairings.map(p => (
-          <div key={p.name} className="flex items-start gap-2.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-[#3B6D11] shrink-0 mt-[6px]" />
+          <div key={p.name} className="flex items-start gap-3">
+            <div className="w-2 h-2 rounded-full bg-[#3B6D11] shrink-0 mt-[6px]" />
             <div>
-              <span className="text-[13px] font-medium text-[#1A1A1A]">{p.name}</span>
-              <span className="text-[11px] text-[#aaa] ml-2">{p.reason}</span>
+              <span className="text-[14px] font-medium text-[#1A1A1A]">{p.name}</span>
+              <span className="text-[12px] text-[#aaa] ml-2">{p.reason}</span>
             </div>
           </div>
         ))}
       </div>
 
       {/* Contemporary pairings */}
-      <div className="flex items-center gap-2 mb-3">
+      <div className="flex items-center gap-2 mb-4">
         <p className="text-[10px] font-medium text-[#aaa] uppercase tracking-widest">Contemporary pairings</p>
         <span className="px-2 py-0.5 rounded-full text-[10px] bg-purple-50 text-purple-700">creative</span>
       </div>
-      <div className="space-y-3">
+      <div className="space-y-4">
         {profile.contemporary_pairings.map(p => (
-          <div key={p.name} className="flex items-start gap-2.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-purple-500 shrink-0 mt-[6px]" />
+          <div key={p.name} className="flex items-start gap-3">
+            <div className="w-2 h-2 rounded-full bg-purple-500 shrink-0 mt-[6px]" />
             <div>
-              <span className="text-[13px] font-medium text-[#1A1A1A]">{p.name}</span>
-              <span className="text-[11px] text-[#aaa] ml-2">{p.reason}</span>
+              <span className="text-[14px] font-medium text-[#1A1A1A]">{p.name}</span>
+              <span className="text-[12px] text-[#aaa] ml-2">{p.reason}</span>
             </div>
           </div>
         ))}
