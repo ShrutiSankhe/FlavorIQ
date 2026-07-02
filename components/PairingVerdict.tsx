@@ -2,21 +2,20 @@ import type { PairingResult } from '@/lib/types'
 
 type VerdictConfig = {
   label: string
-  icon: string
   cardBg: string
   cardBorder: string
-  iconBg: string
-  iconText: string
   titleColor: string
   divider: string
+  dot: string
 }
 
+// Muted, refined verdict colors — no loud greens or reds
 const VERDICT: Record<string, VerdictConfig> = {
-  excellent:   { label: 'Excellent pairing', icon: '✓', cardBg: 'bg-[#EAF3DE]', cardBorder: 'border-[#97C459]', iconBg: 'bg-[#3B6D11]', iconText: 'text-white', titleColor: 'text-[#27500A]', divider: 'border-[#C0DD97]' },
-  good:        { label: 'Good pairing',      icon: '✓', cardBg: 'bg-[#EAF3DE]', cardBorder: 'border-[#97C459]', iconBg: 'bg-[#4F8A1F]', iconText: 'text-white', titleColor: 'text-[#27500A]', divider: 'border-[#C0DD97]' },
-  neutral:     { label: 'Neutral pairing',   icon: '~', cardBg: 'bg-stone-50',   cardBorder: 'border-stone-200', iconBg: 'bg-stone-400',   iconText: 'text-white', titleColor: 'text-stone-700', divider: 'border-stone-200' },
-  challenging: { label: 'Challenging',       icon: '!', cardBg: 'bg-amber-50',   cardBorder: 'border-amber-200', iconBg: 'bg-amber-500',   iconText: 'text-white', titleColor: 'text-amber-900', divider: 'border-amber-200' },
-  avoid:       { label: 'Avoid this pairing',icon: '✕', cardBg: 'bg-red-50',     cardBorder: 'border-red-200',   iconBg: 'bg-red-600',     iconText: 'text-white', titleColor: 'text-red-900',   divider: 'border-red-200'   },
+  excellent:   { label: 'An excellent pairing', cardBg: 'bg-[#EBF0E8]', cardBorder: 'border-[#D5DECE]', titleColor: 'text-[#4E5A3E]', divider: 'border-[#D5DECE]', dot: 'bg-[#6B7355]' },
+  good:        { label: 'A good pairing',       cardBg: 'bg-[#EBF0E8]', cardBorder: 'border-[#D5DECE]', titleColor: 'text-[#4E5A3E]', divider: 'border-[#D5DECE]', dot: 'bg-[#8A9478]' },
+  neutral:     { label: 'A neutral pairing',    cardBg: 'bg-[#F0EDE8]', cardBorder: 'border-[#E2DDD8]', titleColor: 'text-[#7A776E]', divider: 'border-[#E2DDD8]', dot: 'bg-[#B0ADA8]' },
+  challenging: { label: 'A challenging pairing',cardBg: 'bg-[#F2EEE2]', cardBorder: 'border-[#E5DDC8]', titleColor: 'text-[#84754E]', divider: 'border-[#E5DDC8]', dot: 'bg-[#B0A275]' },
+  avoid:       { label: 'Better kept apart',    cardBg: 'bg-[#F2EAE6]', cardBorder: 'border-[#E5D5CE]', titleColor: 'text-[#96604E]', divider: 'border-[#E5D5CE]', dot: 'bg-[#BC8B7A]' },
 }
 
 export default function PairingVerdict({
@@ -29,54 +28,54 @@ export default function PairingVerdict({
   const cfg = VERDICT[result.verdict] ?? VERDICT.neutral
 
   return (
-    <div className="mt-8">
-      <div className="border-t border-[#EEECEA] mb-6" />
+    <div className="mt-10">
+      <div className="border-t border-[#E8E4DF] mb-8" />
 
-      <p className="text-[10px] font-medium text-[#aaa] uppercase tracking-widest mb-3">Pairing analysis</p>
+      <p className="text-[13px] uppercase tracking-[0.12em] text-[#1A1714] mb-4 font-medium">Pairing analysis</p>
 
-      {/* Ingredient pills */}
-      <div className="flex items-center gap-2 mb-4 flex-wrap">
-        <span className="px-3 py-1.5 rounded-lg bg-white border border-[#E0DED8] text-[13px] font-medium text-[#1A1A1A]">{main}</span>
-        <span className="text-[#C0BDB5] text-base">+</span>
-        <span className="px-3 py-1.5 rounded-lg bg-white border border-[#E0DED8] text-[13px] font-medium text-[#1A1A1A]">{pantry}</span>
-      </div>
+      {/* Ingredient names — serif, like a menu line */}
+      <p className="font-display text-[19px] text-[#1A1714] mb-5">
+        {main} <span className="text-[#B0ADA8] font-light mx-1">&</span> {pantry}
+      </p>
 
       {/* Verdict card */}
-      <div className={`rounded-xl p-4 border ${cfg.cardBg} ${cfg.cardBorder}`}>
+      <div className={`rounded-xl p-5 border ${cfg.cardBg} ${cfg.cardBorder}`}>
         <div className="flex items-center gap-2.5 mb-3">
-          <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 ${cfg.iconBg} ${cfg.iconText}`}>
-            {cfg.icon}
-          </div>
-          <span className={`text-[13px] font-medium ${cfg.titleColor}`}>
-            {cfg.label} · {result.score}% match
+          <div className={`w-1.5 h-1.5 rounded-full ${cfg.dot} shrink-0`} />
+          <span className={`font-display italic text-[15px] ${cfg.titleColor}`}>
+            {cfg.label}
+          </span>
+          <span className={`text-[11px] ${cfg.titleColor} opacity-60 ml-auto font-light`}>
+            {result.score}/100
           </span>
         </div>
-        <p className="text-[13px] text-[#555] leading-relaxed mb-3">{result.why}</p>
-        <div className={`border-t pt-3 ${cfg.divider}`}>
-          <p className="text-[12px] text-[#777] leading-relaxed">{result.how_to_use}</p>
+        <p className="text-[13px] text-[#5A564E] leading-[1.8] mb-4 font-light">{result.why}</p>
+        <div className={`border-t pt-4 ${cfg.divider}`}>
+          <p className="text-[12px] text-[#7A776E] leading-[1.7] font-light">{result.how_to_use}</p>
         </div>
       </div>
 
       {/* Shared compounds */}
       {result.shared_compounds?.length > 0 && (
-        <div className="mt-5">
-          <p className="text-[10px] font-medium text-[#aaa] uppercase tracking-widest mb-2">Flavor overlap</p>
-          <div className="flex flex-wrap gap-1.5 mb-1">
+        <div className="mt-6">
+          <p className="text-[13px] uppercase tracking-[0.12em] text-[#1A1714] mb-3 font-medium">What connects them</p>
+          <div className="flex flex-wrap gap-1.5">
             {result.shared_compounds.map(c => (
-              <span key={c} className="px-2.5 py-1 rounded-full text-[11px] bg-[#EAF3DE] text-[#27500A]">{c}</span>
+              <span key={c} className="px-3 py-1.5 rounded-full text-[11px] bg-[#EBF0E8] text-[#6B7355] font-light">{c}</span>
             ))}
           </div>
-          <p className="text-[11px] text-[#C0BDB5] mt-1">Shared characteristics that connect these ingredients</p>
         </div>
       )}
 
       {/* Alternatives */}
       {result.alternatives && result.alternatives.length > 0 && (
-        <div className="mt-5">
-          <p className="text-[10px] font-medium text-[#aaa] uppercase tracking-widest mb-2">Better alternatives to {pantry}</p>
+        <div className="mt-6">
+          <p className="text-[13px] uppercase tracking-[0.12em] text-[#1A1714] mb-3 font-medium">
+            Consider instead
+          </p>
           <div className="flex flex-wrap gap-1.5">
             {result.alternatives.map(a => (
-              <span key={a} className="px-2.5 py-1 rounded-full text-[11px] bg-white border border-[#E0DED8] text-[#555]">{a}</span>
+              <span key={a} className="px-3 py-1.5 rounded-full text-[11px] bg-[#F0EDE8] border border-[#E2DDD8] text-[#7A776E] font-light">{a}</span>
             ))}
           </div>
         </div>

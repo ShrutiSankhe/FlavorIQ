@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Serif+Display&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -12,24 +12,18 @@ html {
 }
 
 body {
-  font-family: 'DM Sans', sans-serif;
-  background: #F7F6F2;
-  color: #1A1A1A;
+  font-family: 'Jost', sans-serif;
+  background: #F8F6F3;
+  color: #1A1714;
   min-height: -webkit-fill-available;
-  /* Prevent text size adjustment on rotation */
   -webkit-text-size-adjust: 100%;
 }
 
 .font-display {
-  font-family: 'DM Serif Display', serif;
+  font-family: 'Lora', serif;
 }
 
-/* Smooth scrolling on iOS */
 * {
   -webkit-overflow-scrolling: touch;
-}
-
-/* Remove tap highlight on mobile */
-* {
   -webkit-tap-highlight-color: transparent;
 }
